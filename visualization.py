@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 from sklearn.manifold import TSNE
 
 # ============================================================
@@ -106,29 +107,18 @@ plt.title("Box Plot")
 plt.show()
 
 # ============================================================
-# Violin Plot
-# ============================================================
-
-plt.figure(figsize=(7, 5))
-
-sns.violinplot(
-    data=df,
-    x="target",
-    y="feature1"
-)
-
-plt.title("Violin Plot")
-plt.show()
-
-# ============================================================
 # PCA Visualization
 # ============================================================
 
+# 1. feature 선택 (numeric feature 선택)
 X = df.drop(columns=["target"])
 
-pca = PCA(n_components=2)
+# 2. scaling (variance가 큰 data 방향으로 projection을 해야하기 때문에)
+X_scaled = StandardScaler().fit_transform(X)
 
-X_pca = pca.fit_transform(X)
+# 3. PCA 적용. 몇 차원으로 줄일건지 n_components 정하기
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
 
 pca_df = pd.DataFrame({
     "PC1": X_pca[:, 0],
@@ -148,34 +138,3 @@ sns.scatterplot(
 plt.title("PCA Projection")
 plt.show()
 
-# ============================================================
-# t-SNE Visualization
-# ============================================================
-
-X = df.drop(columns=["target"])
-
-tsne = TSNE(
-    n_components=2,
-    perplexity=30,
-    random_state=42
-)
-
-X_tsne = tsne.fit_transform(X)
-
-tsne_df = pd.DataFrame({
-    "TSNE1": X_tsne[:, 0],
-    "TSNE2": X_tsne[:, 1],
-    "target": df["target"]
-})
-
-plt.figure(figsize=(7, 6))
-
-sns.scatterplot(
-    data=tsne_df,
-    x="TSNE1",
-    y="TSNE2",
-    hue="target"
-)
-
-plt.title("t-SNE Projection")
-plt.show()
