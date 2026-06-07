@@ -1,0 +1,9 @@
+[W&B Sweep]
+
+deeplearning에서의 구조와 data 에 대한 train loop 틀만 짜고
+hyperparameter(n_layers,hidden_size,lr 등) 를 config라는 변수로 비워놓고 사용 가능하다.
+
+config의 탐색 범위도 sweep_config에서 범위를 주고 확인 가능.
+
+
+
